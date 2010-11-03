@@ -5,10 +5,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -76,19 +76,11 @@ public class SslConnectionWithPreparedClassTest {
     public void testURLSslConnection() throws IOException {
         final URL url = new URL(HTTPS_WWW_GMX_NET);
         final BufferedInputStream stream = new BufferedInputStream(url.openStream());
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            while (true) {
-                final byte[] buffer = new byte[8096];
-                if (stream.read(buffer) == -1) {
-                    break;
-                }
-                outputStream.write(buffer);                
-            }
+            containsTitle(IOUtils.toString(stream));
         } finally {
             stream.close();
         }
-        containsTitle(new String(outputStream.toByteArray()));
     }
 
 }
