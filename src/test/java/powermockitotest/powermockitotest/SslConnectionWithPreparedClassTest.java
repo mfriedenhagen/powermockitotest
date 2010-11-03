@@ -1,8 +1,11 @@
 package powermockitotest.powermockitotest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -32,7 +35,7 @@ public class SslConnectionWithPreparedClassTest {
     private static final String HTTPS_WWW_GMX_NET = "https://www.gmx.net/";
 
     /**
-     * This test will blow if not @PrepareForTest is given, as {@link ClassWithFinalMethods#getString()} is final. 
+     * This test will blow if not @PrepareForTest is given, as {@link ClassWithFinalMethods#getString()} is final.
      */
     @Test
     public void testMock() {
@@ -52,29 +55,40 @@ public class SslConnectionWithPreparedClassTest {
         final HttpClient client = new DefaultHttpClient();
         final HttpGet get = new HttpGet(HTTPS_WWW_GMX_NET);
         final String html = client.execute(get, new BasicResponseHandler());
-        System.out.println(html);
+        containsTitle(html);
+    }
+
+    /**
+     * @param html
+     */
+    void containsTitle(final String html) {
+        assertThat(
+                html,
+                containsString("<title>GMX - E-Mail, FreeMail, De-Mail, Themen- &amp; Shopping-Portal - kostenlos</title>"));
     }
 
     /**
      * This will work, strange.
+     * 
      * @throws IOException
      */
     @Test
     public void testURLSslConnection() throws IOException {
         final URL url = new URL(HTTPS_WWW_GMX_NET);
         final BufferedInputStream stream = new BufferedInputStream(url.openStream());
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             while (true) {
                 final byte[] buffer = new byte[8096];
                 if (stream.read(buffer) == -1) {
                     break;
                 }
-                System.out.print(new String(buffer));
+                outputStream.write(buffer);                
             }
         } finally {
             stream.close();
         }
-
+        containsTitle(new String(outputStream.toByteArray()));
     }
 
 }
