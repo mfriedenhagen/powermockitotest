@@ -10,8 +10,19 @@
     <packaging>jar</packaging>
 
     <name>powermockitotest</name>
-    <url>http://maven.apache.org</url>
-
+    <url>https://github.com/mfriedenhagen/powermockitotest</url>
+    
+    <ciManagement>
+        <system>Hudson</system>
+        <url>http://huschteguzzel.de/hudson/job/powermockitotest/</url>
+    </ciManagement>
+    
+    <scm>
+        <connection>scm:git:git://github.com/mfriedenhagen/powermockitotest.git</connection>
+        <developerConnection>scm:git:git@github.com:mfriedenhagen/powermockitotest.git</developerConnection>
+        <url>https://github.com/mfriedenhagen/powermockitotest</url>
+    </scm>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.4.6</powermock.version>
